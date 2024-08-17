@@ -7,8 +7,13 @@ from datetime import datetime
 
 class User(BaseModel):
     id: Optional[UUID] = uuid4()
-    user_name: str
-    email:EmailStr
-    password: str
-    created_at: Optional[datetime]=datetime.now()
+    user_name : str
+    phone_number : int
+    password : str
+    user_flag : str
+    email : EmailStr
+    address : str
+    age : int
+    profile_picture : str
+    created_at : Optional[datetime]=datetime.now()
     
