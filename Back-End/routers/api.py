@@ -8,6 +8,11 @@ async def register(user:User):
     return "register"
 
 
+@app.post("login", tags=["user", "admin"])
+async def login(user_name:str, password:str):
+    return "login"
+
+
         
 
         
