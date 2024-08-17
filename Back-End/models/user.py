@@ -1,12 +1,21 @@
 from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, CHAR
 
 
-class UserModel(Base):
+class User(Base):
     __tablename__="user"
     
-    id=Column(Integer, primary_key=True, index=True)
+    id=Column(BigInteger, primary_key=True, index=True)
     user_name=Column(String(20), unique=True)
-    email=Column(String(20))
-    password=Column(String(100))
+    phone_number=Column(Integer)
+    password=Column(Text)
+    user_flag=Column(CHAR, default='u')
+    email=Column(String(20), nullable=True)
+    address=Column(Text, nullable=True)
+    age=Column(Integer, nullable=True)
+    profile_picture=Column(Text, nullable=True)
     created_at=Column(DateTime)
+    
+    
+    def __repr__(self) -> str:
+        return self.user_name
