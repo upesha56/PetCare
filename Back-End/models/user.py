@@ -13,9 +13,7 @@ class User(Base):
     email=Column(String(20), nullable=True)
     address=Column(Text, nullable=True)
     age=Column(Integer, nullable=True)
-    profile_picture=Column(Text, nullable=True)
-    created_at=Column(DateTime)
-    
+    profile_picture=Column(Text, nullable=True)    
     
     def __repr__(self) -> str:
         return self.user_name
