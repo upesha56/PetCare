@@ -32,7 +32,7 @@ def createUser(user_name:str, password:str, phone_number:int):
         
 def loginUser(user_name:str, password:str):
     try:
-        existingUser=session.query(UserModel).filter(UserModel.user_name==user_name).first()
+        existingUser=session.query(UserModel).filter_by(user_name=user_name).first()
         if existingUser:
             isTrue=verifyHash(rowPassword=password, hashedPassword=existingUser.password)
             if isTrue:
