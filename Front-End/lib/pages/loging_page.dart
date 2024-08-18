@@ -2,6 +2,9 @@ import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/signup_page.dart';
 import 'package:chat/pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -11,6 +14,100 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+
+  // text editing controllers
+  final userNameController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  bool isLoading = false;
+
+    // sign user in method
+  void signInUser() async {
+    // show loading circle
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
+
+    var user_name = userNameController.text;
+    var password = passwordController.text;
+
+    var url = 'http://127.0.0.1:8000//login?user_name=$user_name&password=$password';
+
+    var response = await http.post(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      print('Response: $data');
+
+      // Check the response data to determine success
+      if (data['detail'] == 'user logging successfully') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const userProfile()),
+        );
+      } else {
+        // Handle other cases when the server response indicates failure
+        print('Error: ${data['detail']}');
+      }
+    }
+    // try sign in
+    /* try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      // pop the loading circle
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // pop the loading circle
+      Navigator.pop(context);
+
+      String errorMessage = 'An error occurred';
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        // show error to user
+        errorMessage = 'user-not-found';
+        showErrorDialog(errorMessage);
+      }
+
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        // show error to user
+        errorMessage = 'wrong-password';
+        showErrorDialog(errorMessage);
+      }
+      // show error to user
+      showErrorDialog(errorMessage);
+    }*/
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,6 +161,7 @@ class _loginState extends State<login> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextField(
+          controller: userNameController,
           decoration: InputDecoration(
               hintText: "User Name",
               border: OutlineInputBorder(
@@ -75,6 +173,7 @@ class _loginState extends State<login> {
         ),
         const SizedBox(height: 20),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
@@ -108,11 +207,7 @@ class _loginState extends State<login> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const userProfile();
-            }));
-          },
+          onPressed: signInUser,
           child: GestureDetector(
             onTap: () {
               Navigator.push(
