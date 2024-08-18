@@ -26,7 +26,7 @@ def createUser(user_name:str, password:str, phone_number:int):
             session.add(newUser)
             session.commit()
             session.refresh(newUser)
-            return 201
+            return 201, newUser.id
     except Exception as e:
         logging.exception(e)
         
@@ -36,7 +36,7 @@ def loginUser(user_name:str, password:str):
         if existingUser:
             isTrue=verifyHash(rowPassword=password, hashedPassword=existingUser.password)
             if isTrue:
-                return 200
+                return 200, existingUser.id
             else:
                 return 400
         else:
