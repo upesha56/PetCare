@@ -44,5 +44,25 @@ def loginUser(user_name:str, password:str):
     except Exception as e:
         logging.exception(e)
         
+def updateUser(user_name:str, email:str, address:str, age:int, profile_picture):
+    try:
+        existingUser=session.query(UserModel).filter_by(user_name=user_name).first()
+        if existingUser:
+            if email is not None:
+                existingUser.email=email
+            if address is not None:
+                existingUser.address=address
+            if age is not None:
+                existingUser.age=age
+            if profile_picture is not None:
+                existingUser.profile_picture=profile_picture
+            session.commit()
+            session.refresh(existingUser)
+            return 200
+        else:
+            return 401
+    except Exception as e:
+        logging.exception(e)
+        
         
         
