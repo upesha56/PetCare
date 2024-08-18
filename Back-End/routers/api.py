@@ -25,21 +25,25 @@ def register():
             session['userId']=userId
             
             if _status == 201:
-                return jsonify({'detail': "User created successfully"}), 201
+                return jsonify({'detail': "User created successfully"})
             else:
-                return jsonify({'detail': "User name already registered"}), 409
+                return jsonify({'detail': "User name already registered"})
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': str(e)})
     
     
-@app.route('/login', methods=["GET", "POST"])
+@app.route('/login', methods=["POST"])
 def login():
     try:
         if request.method == "POST":
-            user_name = request.args.get('user_name')
-            password = request.args.get('password')
+            data=request.get_json()
+            user_name = str(data['user_name'])
+            password = str(data['password'])
+            print(user_name)
             
             _status, userId=loginUser(user_name=user_name, password=password)
+            
+            
             session['userId']=userId
             
             if _status == 200:
@@ -49,7 +53,7 @@ def login():
             else:
                 return jsonify({'detail': "Incorrect user name"}), 401
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': str(e)}), 500
     
 @app.route('/logout', methods=["GET", "POST"])
 def logout():
