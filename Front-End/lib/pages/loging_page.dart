@@ -24,68 +24,60 @@ class _loginState extends State<login> {
 
     // sign user in method
   void signInUser() async {
-    // show loading circle
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
+    setState(() {
+      isLoading = true;
+    });
 
     var user_name = userNameController.text;
     var password = passwordController.text;
 
-    var url = 'http://127.0.0.1:8000//login?user_name=$user_name&password=$password';
 
-    var response = await http.post(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      print('Response: $data');
-
-      // Check the response data to determine success
-      if (data['detail'] == 'user logging successfully') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const userProfile()),
-        );
-      } else {
-        // Handle other cases when the server response indicates failure
-        print('Error: ${data['detail']}');
-      }
+     // Ensure both fields are filled
+    if (user_name.isEmpty || password.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('Please enter both username and password.');
+      return;
     }
-    // try sign in
-    /* try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+    try{
+      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {"user_name": user_name, "password": password}
+        )
       );
-      // pop the loading circle
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // pop the loading circle
-      Navigator.pop(context);
 
-      String errorMessage = 'An error occurred';
-      // WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        // show error to user
-        errorMessage = 'user-not-found';
-        showErrorDialog(errorMessage);
-      }
+      setState(() {
+        isLoading = false;
+      });
 
-      // WRONG PASSWORD
-      else if (e.code == 'wrong-password') {
-        // show error to user
-        errorMessage = 'wrong-password';
-        showErrorDialog(errorMessage);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'user logging successfully') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const userProfile()),
+          );
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
       }
-      // show error to user
-      showErrorDialog(errorMessage);
-    }*/
+      else{
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      } 
+    }catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('An error occurred. Please try again.');
+    }
   }
+
 
   //error showing method
   void showErrorDialog(String errorMessage) {
@@ -94,7 +86,7 @@ class _loginState extends State<login> {
         content: Text(
           errorMessage,
           style: const TextStyle(
-            color: Colors.white,
+            color: Color.fromARGB(255, 0, 0, 0),
             fontSize: 16.0,
           ),
         ),
@@ -208,25 +200,16 @@ class _loginState extends State<login> {
       children: <Widget>[
         ElevatedButton(
           onPressed: signInUser,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ));
-            },
-            child: const Text(
-              "Sign In",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
             shape: MaterialStateProperty.all(const StadiumBorder()),
             padding: MaterialStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 10)),
+              const EdgeInsets.symmetric(vertical: 10)),
+          ),
+          child: const Text(
+            "Sign In",
+            style: TextStyle(fontSize: 20),
           ),
         ),
       ],
@@ -238,7 +221,7 @@ class _loginState extends State<login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const Text(
-          "Don't have aan account?",
+          "Don't have an account?",
           style: TextStyle(fontSize: 18),
         ),
         TextButton(
