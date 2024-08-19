@@ -1,6 +1,9 @@
 import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/loging_page.dart';
+import 'package:chat/pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class signUp extends StatefulWidget {
   const signUp({super.key});
@@ -10,6 +13,90 @@ class signUp extends StatefulWidget {
 }
 
 class _signUpState extends State<signUp> {
+
+    // text editing controllers
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool isLoading = false;
+
+    // sign user in method
+  void signInUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var user_name = userNameController.text;
+    var password = passwordController.text;
+
+
+     // Ensure both fields are filled
+    if (user_name.isEmpty || password.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('Please enter both username and password.');
+      return;
+    }
+    try{
+      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {"user_name": user_name, "password": password}
+        )
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'user logging successfully') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const userProfile()),
+          );
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
+      }
+      else{
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      } 
+    }catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

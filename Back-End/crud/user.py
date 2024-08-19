@@ -38,9 +38,9 @@ def loginUser(user_name:str, password:str):
             if isTrue:
                 return 200, existingUser.id
             else:
-                return 400
+                return 400, None
         else:
-            return 401
+            return 401, None
     except Exception as e:
         logging.exception(e)
         

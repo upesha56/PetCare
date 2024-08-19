@@ -5,7 +5,6 @@ from flask_cors import CORS
 
 app=Flask(__name__)
 app.secret_key=os.getenv('APP_SECRET_KEY')
-CORS(app=app)
 
 
 @app.route("/")
@@ -39,7 +38,6 @@ def login():
             data=request.get_json()
             user_name = str(data['user_name'])
             password = str(data['password'])
-            print(user_name)
             
             _status, userId=loginUser(user_name=user_name, password=password)
             
@@ -49,9 +47,11 @@ def login():
             if _status == 200:
                 return jsonify({"detail":"user logging successfully"}), 200
             elif _status == 400:
-                return jsonify({'detail': "Bad request"}), 400
-            else:
+                return jsonify({'detail': "Incorrect password"}), 400
+            elif _status==401:
                 return jsonify({'detail': "Incorrect user name"}), 401
+            else: 
+                return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
