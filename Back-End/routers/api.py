@@ -12,21 +12,22 @@ def index():
     return "hello"
 
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route('/register', methods=["POST"])
 def register():
     try:
         if request.method == "POST":
-            user_name = request.args.get('user_name')
-            phone_number = request.args.get('user_name')
-            password = request.args.get('password')
+            data=request.get_json()
+            user_name = str(data.get('user_name'))
+            phone_number = str(data.get('phone_number'))
+            password = str(data.get('password'))
             
             _status, userId=createUser(user_name=user_name, phone_number=phone_number, password=password)
             session['userId']=userId
             
             if _status == 201:
-                return jsonify({'detail': "User created successfully"})
+                return jsonify({'detail': "User created successfully"}), 201
             else:
-                return jsonify({'detail': "User name already registered"})
+                return jsonify({'detail': "User name already registered"}), 400
     except Exception as e:
         return jsonify({'error': str(e)})
     

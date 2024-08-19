@@ -3,6 +3,7 @@ import 'package:chat/pages/loging_page.dart';
 import 'package:chat/pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 
 class signUp extends StatefulWidget {
@@ -17,34 +18,39 @@ class _signUpState extends State<signUp> {
     // text editing controllers
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+
 
   bool isLoading = false;
 
     // sign user in method
-  void signInUser() async {
+  void signUPUser() async {
     setState(() {
       isLoading = true;
     });
 
     var user_name = userNameController.text;
     var password = passwordController.text;
+    var phone_number=phoneNumberController.text;
 
 
      // Ensure both fields are filled
-    if (user_name.isEmpty || password.isEmpty) {
+    if (user_name.isEmpty || password.isEmpty || phone_number.isEmpty) {
       setState(() {
         isLoading = false;
       });
-      showErrorDialog('Please enter both username and password.');
+      showErrorDialog('Please enter username ,password and phone Number.');
       return;
     }
     try{
-      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var url = Uri.parse('http://10.0.2.2:8000/register');
       var response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: json.encode(
-          {"user_name": user_name, "password": password}
+          {"user_name": user_name, 
+          "password": password,
+          "phone_number":phone_number}
         )
       );
 
@@ -52,10 +58,10 @@ class _signUpState extends State<signUp> {
         isLoading = false;
       });
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         var data = json.decode(response.body);
 
-        if (data['detail'] == 'user logging successfully') {
+        if (data['detail'] == 'User created successfully') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const userProfile()),
@@ -154,6 +160,7 @@ class _signUpState extends State<signUp> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextField(
+          controller:userNameController,
           decoration: InputDecoration(
               hintText: "User Name",
               border: OutlineInputBorder(
@@ -165,6 +172,7 @@ class _signUpState extends State<signUp> {
         ),
         const SizedBox(height: 10),
         TextField(
+          controller: phoneNumberController,
           decoration: InputDecoration(
               hintText: "Phone Number",
               border: OutlineInputBorder(
@@ -178,6 +186,7 @@ class _signUpState extends State<signUp> {
           height: 10,
         ),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
@@ -202,20 +211,7 @@ class _signUpState extends State<signUp> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () {},
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ));
-            },
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          onPressed: signUPUser,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -223,7 +219,11 @@ class _signUpState extends State<signUp> {
             padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(vertical: 10)),
           ),
-        ),
+            child: const Text(
+              "Sign Up",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
       ],
     );
   }

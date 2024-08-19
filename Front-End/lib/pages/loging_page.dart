@@ -17,7 +17,6 @@ class _loginState extends State<login> {
 
   // text editing controllers
   final userNameController = TextEditingController();
-
   final passwordController = TextEditingController();
 
   bool isLoading = false;
@@ -77,7 +76,6 @@ class _loginState extends State<login> {
       showErrorDialog('An error occurred. Please try again.');
     }
   }
-
 
   //error showing method
   void showErrorDialog(String errorMessage) {
