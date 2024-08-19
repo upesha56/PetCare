@@ -15,5 +15,3 @@ class User(Base):
     age=Column(Integer, nullable=True)
     profile_picture=Column(Text, nullable=True)    
     
-    def __repr__(self) -> str:
-        return self.user_name

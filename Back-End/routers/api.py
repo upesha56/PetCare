@@ -1,11 +1,13 @@
 import os 
-from flask import Flask, request, jsonify, session
-from crud.user import createUser, loginUser
+from flask import Flask, request, jsonify
+from crud.user import createUser, loginUser, getUser
 from flask_cors import CORS
 
 app=Flask(__name__)
 app.secret_key=os.getenv('APP_SECRET_KEY')
 
+
+session=dict()
 
 @app.route("/")
 def index():
@@ -21,8 +23,8 @@ def register():
             phone_number = str(data.get('phone_number'))
             password = str(data.get('password'))
             
-            _status, userId=createUser(user_name=user_name, phone_number=phone_number, password=password)
-            session['userId']=userId
+            _status, user_name=createUser(user_name=user_name, phone_number=phone_number, password=password)
+            session['user_name'] = user_name
             
             if _status == 201:
                 return jsonify({'detail': "User created successfully"}), 201
@@ -40,11 +42,10 @@ def login():
             user_name = str(data['user_name'])
             password = str(data['password'])
             
-            _status, userId=loginUser(user_name=user_name, password=password)
-            
-            
-            session['userId']=userId
-            
+            _status, user_name=loginUser(user_name=user_name, password=password)
+                        
+            session['user_name']=user_name
+                        
             if _status == 200:
                 return jsonify({"detail":"user logging successfully"}), 200
             elif _status == 400:
@@ -55,6 +56,24 @@ def login():
                 return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+ 
+@app.route('/user-profile', methods=["GET"])
+def userProfile():
+    try:
+        if not request.method=="POST":
+            user = getUser(user_name=session.get('user_name'))
+            if user:
+                return jsonify({
+                    "detail": "User profile retrieved successfully",
+                    "userName": user.user_name,
+                }), 200
+            else:
+                return jsonify({'detail': "Unexpected error"}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500   
+    
+
+
     
 @app.route('/logout', methods=["GET", "POST"])
 def logout():

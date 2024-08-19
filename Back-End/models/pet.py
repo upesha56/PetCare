@@ -16,5 +16,3 @@ class Pet(Base):
     medical_history=Column(Text)
     
     
-    def __repr__(self) -> str:
-        return self.id

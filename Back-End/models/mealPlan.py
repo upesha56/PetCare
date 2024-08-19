@@ -9,6 +9,3 @@ class MealPlan(Base):
     pet=Column(BigInteger, ForeignKey('pet.id'))
     duration=Column(Integer)
     
-    
-    def __repr__(self) -> str:
-        return self.id

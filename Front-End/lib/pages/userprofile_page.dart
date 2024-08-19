@@ -1,5 +1,7 @@
 import 'package:chat/pages/loging_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class userProfile extends StatefulWidget {
   const userProfile({super.key});
@@ -9,6 +11,43 @@ class userProfile extends StatefulWidget {
 }
 
 class _userProfileState extends State<userProfile> {
+  Future<String?> userProfile() async {
+    try {
+      var url = Uri.parse('http://10.0.2.2:8000/user-profile');
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        return data['userName'];
+      } else {
+        return 'Failed to fetch user profile. Status code: ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'An error occurred. Please try again.';
+    }
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,37 +76,105 @@ class _userProfileState extends State<userProfile> {
   }
 
   _userDetail() {
-    return Row(
-      children: [
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Hello",
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Kawidi Rangalla",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 20,
+    return FutureBuilder<String?>(
+      future: userProfile(), // Call the asynchronous function
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Row(
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hello",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Loading...",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
-        const SizedBox(
-          width: 55,
-        ),
-        Container(
-          color: Colors.amberAccent,
-          child: const Image(
-            image: AssetImage("assets/loginAndSignin/signin.png"),
-            width: 150,
-            height: 150,
-          ),
-        ),
-      ],
+              const SizedBox(width: 55),
+              Container(
+                color: Colors.amberAccent,
+                child: const Image(
+                  image: AssetImage("assets/loginAndSignin/signin.png"),
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError || !snapshot.hasData) {
+          // Handle errors and null data
+          return Row(
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hello",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Error",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 55),
+              Container(
+                color: Colors.amberAccent,
+                child: const Image(
+                  image: AssetImage("assets/loginAndSignin/signin.png"),
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Hello",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    snapshot.data ?? "User",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 55),
+              Container(
+                color: Colors.amberAccent,
+                child: const Image(
+                  image: AssetImage("assets/loginAndSignin/signin.png"),
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -92,12 +199,12 @@ class _userProfileState extends State<userProfile> {
               borderRadius: BorderRadius.circular(20),
               color: Colors.amberAccent,
             ),
+            width: 80,
+            height: 80,
             child: IconButton(
               onPressed: () {},
               icon: const Image(image: AssetImage("assets/doglogo.jpg")),
             ),
-            width: 80,
-            height: 80,
           ),
           const SizedBox(
             width: 10,
@@ -107,14 +214,14 @@ class _userProfileState extends State<userProfile> {
               borderRadius: BorderRadius.circular(20),
               color: Colors.amberAccent,
             ),
+            width: 80,
+            height: 80,
             child: IconButton(
               onPressed: () {},
               icon: const Image(
                 image: AssetImage("assets/catlogo.jpg"),
               ),
             ),
-            width: 80,
-            height: 80,
           ),
           const SizedBox(
             width: 10,
@@ -124,14 +231,14 @@ class _userProfileState extends State<userProfile> {
               borderRadius: BorderRadius.circular(20),
               color: Colors.amberAccent,
             ),
+            width: 80,
+            height: 80,
             child: IconButton(
               onPressed: () {},
               icon: const Image(
                 image: AssetImage("assets/fish.jpg"),
               ),
             ),
-            width: 80,
-            height: 80,
           ),
           const SizedBox(
             width: 10,
@@ -141,14 +248,14 @@ class _userProfileState extends State<userProfile> {
               borderRadius: BorderRadius.circular(20),
               color: Colors.amberAccent,
             ),
+            width: 80,
+            height: 80,
             child: IconButton(
               onPressed: () {},
               icon: const Image(
                 image: const AssetImage("assets/rabbit.jpg"),
               ),
             ),
-            width: 80,
-            height: 80,
           ),
         ]),
         const SizedBox(

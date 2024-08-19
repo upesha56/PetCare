@@ -26,7 +26,7 @@ def createUser(user_name:str, password:str, phone_number:int):
             session.add(newUser)
             session.commit()
             session.refresh(newUser)
-            return 201, newUser.id
+            return 201, newUser.user_name
     except Exception as e:
         logging.exception(e)
         
@@ -36,11 +36,18 @@ def loginUser(user_name:str, password:str):
         if existingUser:
             isTrue=verifyHash(rowPassword=password, hashedPassword=existingUser.password)
             if isTrue:
-                return 200, existingUser.id
+                return 200, existingUser.user_name
             else:
                 return 400, None
         else:
             return 401, None
+    except Exception as e:
+        logging.exception(e)
+        
+def getUser(user_name:str):
+    try:
+        existingUser=session.query(UserModel).filter_by(user_name=user_name).first()
+        return existingUser
     except Exception as e:
         logging.exception(e)
         
