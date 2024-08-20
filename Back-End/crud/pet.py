@@ -3,6 +3,7 @@ from models.pet import Pet as PetModel
 from models.user import User as UserModel
 import logging
 
+Base.metadata.create_all(engine)
 
 def addPet(user_name:str, pet:dict):
     try:

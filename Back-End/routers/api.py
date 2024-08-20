@@ -7,7 +7,6 @@ from flask_cors import CORS
 app=Flask(__name__)
 app.secret_key=os.getenv('APP_SECRET_KEY')
 
-
 session=dict()
 
 @app.route("/")
@@ -52,16 +51,23 @@ def login():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
  
-@app.route('/user-profile', methods=["GET"])
+@app.route('/user-profile', methods=["GET", "POST"])
 def userProfile():
     try:
+        user = getUser(user_name=session.get('user_name'))
         if not request.method=="POST":
-            user = getUser(user_name=session.get('user_name'))
             if user:
                 return jsonify({
                     "detail": "User profile retrieved successfully",
                     "userName": user.user_name,
                 }), 200
+            else:
+                return jsonify({'detail': "Unexpected error"}), 500
+        else:
+            data=request.get_json()
+            if data:
+                print(data)
+                return jsonify({"detail": "Type of pet add successfully"}), 200
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
