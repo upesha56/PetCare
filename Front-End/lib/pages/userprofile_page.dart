@@ -1,5 +1,6 @@
 import 'package:chat/pages/loging_page.dart';
 import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -10,6 +11,8 @@ class userProfile extends StatefulWidget {
   State<userProfile> createState() => _userProfileState();
 }
 
+// ignore: non_constant_identifier_names
+final typeOfPetController = TextEditingController();
 class _userProfileState extends State<userProfile> {
   Future<String?> userProfile() async {
     try {
@@ -24,6 +27,45 @@ class _userProfileState extends State<userProfile> {
       }
     } catch (e) {
       return 'An error occurred. Please try again.';
+    }
+  }
+
+  void selectPetCategory(String type_of_pet) async {
+
+     // Ensure both fields are filled
+    if (type_of_pet.isEmpty) {
+      showErrorDialog('Please enter type of pet.');
+      return;
+    }
+    try{
+      var url = Uri.parse('http://10.0.2.2:8000/user-profile');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {"type_of_pet": type_of_pet}
+        )
+      );
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'Type of pet add successfully') {
+          //Navigator.push(
+            //context,
+           // MaterialPageRoute(builder: (context) => const userProfile()),
+          //);
+          print("hi");
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
+      }
+      else{
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      } 
+    }catch(e){
+      showErrorDialog('An error occurred. Please try again.');
     }
   }
 
@@ -202,7 +244,9 @@ class _userProfileState extends State<userProfile> {
             width: 80,
             height: 80,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                selectPetCategory("dog");
+              },
               icon: const Image(image: AssetImage("assets/doglogo.jpg")),
             ),
           ),
@@ -217,7 +261,9 @@ class _userProfileState extends State<userProfile> {
             width: 80,
             height: 80,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                selectPetCategory("cat");
+              },
               icon: const Image(
                 image: AssetImage("assets/catlogo.jpg"),
               ),
@@ -234,7 +280,9 @@ class _userProfileState extends State<userProfile> {
             width: 80,
             height: 80,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                selectPetCategory("fish");
+              },
               icon: const Image(
                 image: AssetImage("assets/fish.jpg"),
               ),
@@ -251,7 +299,9 @@ class _userProfileState extends State<userProfile> {
             width: 80,
             height: 80,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                selectPetCategory("rabbit");
+              },
               icon: const Image(
                 image: const AssetImage("assets/rabbit.jpg"),
               ),
