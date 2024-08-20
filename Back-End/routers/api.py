@@ -70,7 +70,26 @@ def userProfile():
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
-        return jsonify({'error': str(e)}), 500   
+        return jsonify({'error': str(e)}), 500 
+    
+@app.route('/pet-registration', methods=["POST"])
+def petRegistration():
+    try:
+        if request.method=="POST":
+            data=request.get_json()
+            user_name = str(data.get('user_name'))
+            phone_number = str(data.get('phone_number'))
+            password = str(data.get('password'))
+            
+            _status, user_name=createUser(user_name=user_name, phone_number=phone_number, password=password)
+            session['user_name'] = user_name
+            
+            if _status == 201:
+                return jsonify({'detail': "User created successfully"}), 201
+            else:
+                return jsonify({'detail': "User name already registered"}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500     
     
 
 

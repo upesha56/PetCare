@@ -14,3 +14,5 @@ Base=declarative_base()
 localSession=sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 Base.metadata.create_all(engine)
+
+session=localSession()

@@ -1,13 +1,9 @@
-from database.database import localSession, engine, Base
+from database.database import session, engine, Base
 from models.user import User as UserModel
-from models.pet import Pet as PetModel
-from models.mealPlan import MealPlan as MealPlanModel
 from utils.hash import generateHash, verifyHash
 import logging
 
 Base.metadata.create_all(engine)
-
-session=localSession()
 
 
 def createUser(user_name:str, password:str, phone_number:int):

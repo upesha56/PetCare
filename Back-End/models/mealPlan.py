@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger
 class MealPlan(Base):
     __tablename__="mealPlan"
     
-    id=Column(BigInteger, primary_key=True, index=True)
-    pet=Column(BigInteger, ForeignKey('pet.id'))
+    meal_id=Column(BigInteger, primary_key=True, index=True)
+    pet=Column(BigInteger, ForeignKey('pet.pet_id'))
     duration=Column(Integer)
     

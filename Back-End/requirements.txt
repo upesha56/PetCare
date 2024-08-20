@@ -1,12 +1,4 @@
-uvicorn
-fastapi
+flask
 sqlalchemy
 python-dotenv
-passlib
-langchain
-langchain_community
-pinecone
-langchain_core
-unstructured
-langchain_groq
-rank_bm25
+flask_cors

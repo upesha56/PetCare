@@ -1,5 +1,5 @@
 from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, CHAR
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, CHAR, LargeBinary
 
 
 class User(Base):
@@ -13,5 +13,5 @@ class User(Base):
     email=Column(String(20), nullable=True)
     address=Column(Text, nullable=True)
     age=Column(Integer, nullable=True)
-    profile_picture=Column(Text, nullable=True)    
+    profile_picture=Column(LargeBinary, nullable=True)    
     
