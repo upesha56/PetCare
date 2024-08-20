@@ -9,9 +9,12 @@ def addPet(user_name:str, pet:dict):
         user=session.query(UserModel).filter(user_name=user_name).first()
         pet['owner']=user.id
         newPet=PetModel(**pet)
-        session.add(newPet)
-        session.commit()
-        session.refresh(newPet)
-        
+        if newPet:
+            session.add(newPet)
+            session.commit()
+            session.refresh(newPet)
+            return 201
+        else:
+            return 500
     except Exception as e:
         logging.exception(e)

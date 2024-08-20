@@ -1,6 +1,7 @@
 import os 
 from flask import Flask, request, jsonify
 from crud.user import createUser, loginUser, getUser
+from crud.pet import addPet
 from flask_cors import CORS
 
 app=Flask(__name__)
@@ -19,14 +20,11 @@ def register():
     try:
         if request.method == "POST":
             data=request.get_json()
-            user_name = str(data.get('user_name'))
-            phone_number = str(data.get('phone_number'))
-            password = str(data.get('password'))
             
-            _status, user_name=createUser(user_name=user_name, phone_number=phone_number, password=password)
-            session['user_name'] = user_name
+            _status, user_name=createUser(**data)
             
             if _status == 201:
+                session['user_name'] = user_name
                 return jsonify({'detail': "User created successfully"}), 201
             else:
                 return jsonify({'detail': "User name already registered"}), 400
@@ -39,14 +37,11 @@ def login():
     try:
         if request.method == "POST":
             data=request.get_json()
-            user_name = str(data['user_name'])
-            password = str(data['password'])
             
-            _status, user_name=loginUser(user_name=user_name, password=password)
-                        
-            session['user_name']=user_name
-                        
+            _status, user_name=loginUser(**data)
+                                                
             if _status == 200:
+                session['user_name']=user_name
                 return jsonify({"detail":"user logging successfully"}), 200
             elif _status == 400:
                 return jsonify({'detail': "Incorrect password"}), 400
@@ -77,17 +72,13 @@ def petRegistration():
     try:
         if request.method=="POST":
             data=request.get_json()
-            user_name = str(data.get('user_name'))
-            phone_number = str(data.get('phone_number'))
-            password = str(data.get('password'))
             
-            _status, user_name=createUser(user_name=user_name, phone_number=phone_number, password=password)
-            session['user_name'] = user_name
+            _status=addPet(user_name=session['user_name'], pet=data)
             
             if _status == 201:
-                return jsonify({'detail': "User created successfully"}), 201
+                return jsonify({'detail': "Pet Registration successfully"}), 201
             else:
-                return jsonify({'detail': "User name already registered"}), 400
+                return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500     
     
