@@ -37,19 +37,19 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
           child: Column(
             children: [
               _profilePic(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _nameField(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _birthdayField(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _genderToggle(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _statusToggle(context),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _weightField(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _breedField(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _actionButtons(context),
             ],
           ),
@@ -63,7 +63,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       onTap: () {
         // Handle image upload
       },
-      child: CircleAvatar(
+      child: const CircleAvatar(
         radius: 50,
         backgroundColor: Colors.orangeAccent,
         child: Icon(Icons.add_a_photo, size: 50),
@@ -72,7 +72,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   }
 
   Widget _nameField(BuildContext context) {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         labelText: 'Name',
         border: OutlineInputBorder(),
@@ -83,7 +83,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   Widget _birthdayField(BuildContext context) {
     return TextField(
       controller: _birthdayController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Birthday',
         border: OutlineInputBorder(),
       ),
@@ -96,7 +96,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Gender',
           style: TextStyle(
             fontSize: 16,
@@ -111,7 +111,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
           selectedBorderColor: Colors.orange,
           selectedColor: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             minHeight: 40.0,
             minWidth: 100.0,
           ),
@@ -123,7 +123,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
               }
             });
           },
-          children: <Widget>[
+          children: const <Widget>[
             Text("Female"),
             Text("Male"),
           ],
@@ -136,7 +136,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Status',
           style: TextStyle(
             fontSize: 16,
@@ -151,7 +151,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
           selectedBorderColor: Colors.orange,
           selectedColor: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             minHeight: 40.0,
             minWidth: 100.0,
           ),
@@ -163,7 +163,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
               }
             });
           },
-          children: <Widget>[
+          children: const <Widget>[
             Text("Yes"),
             Text("No"),
           ],
@@ -173,7 +173,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   }
 
   Widget _weightField(BuildContext context) {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         labelText: 'Weight (Kg)',
         border: OutlineInputBorder(),
@@ -183,7 +183,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   }
 
   Widget _breedField(BuildContext context) {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         labelText: 'Breed',
         border: OutlineInputBorder(),
@@ -201,7 +201,6 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
             onPressed: () {
               // Handle back action
             },
-            child: Text('Back'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
               shape: RoundedRectangleBorder(
@@ -209,6 +208,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
                     BorderRadius.circular(10.0), // Set the border radius here
               ),
             ),
+            child: const Text('Back'),
           ),
         ),
         SizedBox(
@@ -222,7 +222,6 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
               //    ),
               //  );
             },
-            child: Text('Add'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
               shape: RoundedRectangleBorder(
@@ -230,6 +229,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
                     BorderRadius.circular(10.0), // Set the border radius here
               ),
             ),
+            child: const Text('Add'),
           ),
         )
       ],

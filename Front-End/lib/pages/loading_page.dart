@@ -1,6 +1,7 @@
 import 'package:chat/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
+
 class LoadingPage extends StatelessWidget {
   const LoadingPage(
       {super.key,

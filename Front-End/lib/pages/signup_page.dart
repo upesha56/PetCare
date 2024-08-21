@@ -1,6 +1,10 @@
 import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/loging_page.dart';
+import 'package:chat/pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
 
 class signUp extends StatefulWidget {
   const signUp({super.key});
@@ -10,6 +14,95 @@ class signUp extends StatefulWidget {
 }
 
 class _signUpState extends State<signUp> {
+
+    // text editing controllers
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+
+
+  bool isLoading = false;
+
+    // sign user in method
+  void signUPUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var user_name = userNameController.text;
+    var password = passwordController.text;
+    var phone_number=phoneNumberController.text;
+
+
+     // Ensure both fields are filled
+    if (user_name.isEmpty || password.isEmpty || phone_number.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('Please enter username ,password and phone Number.');
+      return;
+    }
+    try{
+      var url = Uri.parse('http://10.0.2.2:8000/register');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {"user_name": user_name, 
+          "password": password,
+          "phone_number":phone_number}
+        )
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.statusCode == 201) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'User created successfully') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const userProfile()),
+          );
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
+      }
+      else{
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      } 
+    }catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -67,6 +160,7 @@ class _signUpState extends State<signUp> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextField(
+          controller:userNameController,
           decoration: InputDecoration(
               hintText: "User Name",
               border: OutlineInputBorder(
@@ -78,6 +172,7 @@ class _signUpState extends State<signUp> {
         ),
         const SizedBox(height: 10),
         TextField(
+          controller: phoneNumberController,
           decoration: InputDecoration(
               hintText: "Phone Number",
               border: OutlineInputBorder(
@@ -91,6 +186,7 @@ class _signUpState extends State<signUp> {
           height: 10,
         ),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
@@ -115,20 +211,7 @@ class _signUpState extends State<signUp> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () {},
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ));
-            },
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          onPressed: signUPUser,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -136,7 +219,11 @@ class _signUpState extends State<signUp> {
             padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(vertical: 10)),
           ),
-        ),
+            child: const Text(
+              "Sign Up",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
       ],
     );
   }

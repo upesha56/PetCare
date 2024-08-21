@@ -2,6 +2,9 @@ import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/signup_page.dart';
 import 'package:chat/pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -11,6 +14,90 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+
+  // text editing controllers
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool isLoading = false;
+
+    // sign user in method
+  void signInUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var user_name = userNameController.text;
+    var password = passwordController.text;
+
+
+     // Ensure both fields are filled
+    if (user_name.isEmpty || password.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('Please enter both username and password.');
+      return;
+    }
+    try{
+      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {"user_name": user_name, "password": password}
+        )
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'user logging successfully') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const userProfile()),
+          );
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
+      }
+      else{
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      } 
+    }catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,6 +151,7 @@ class _loginState extends State<login> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextField(
+          controller: userNameController,
           decoration: InputDecoration(
               hintText: "User Name",
               border: OutlineInputBorder(
@@ -75,6 +163,7 @@ class _loginState extends State<login> {
         ),
         const SizedBox(height: 20),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
@@ -108,30 +197,17 @@ class _loginState extends State<login> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const userProfile();
-            }));
-          },
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ));
-            },
-            child: const Text(
-              "Sign In",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          onPressed: signInUser,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
             shape: MaterialStateProperty.all(const StadiumBorder()),
             padding: MaterialStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 10)),
+              const EdgeInsets.symmetric(vertical: 10)),
+          ),
+          child: const Text(
+            "Sign In",
+            style: TextStyle(fontSize: 20),
           ),
         ),
       ],
@@ -143,7 +219,7 @@ class _loginState extends State<login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const Text(
-          "Don't have aan account?",
+          "Don't have an account?",
           style: TextStyle(fontSize: 18),
         ),
         TextButton(
