@@ -7,8 +7,8 @@ Base.metadata.create_all(engine)
 
 def addPet(user_name:str, pet:dict):
     try:
-        user=session.query(UserModel).filter(user_name=user_name).first()
-        pet['owner']=user.id
+        user=session.query(UserModel).filter_by(user_name=user_name).first()
+        pet['owner']=user_name
         newPet=PetModel(**pet)
         if newPet:
             session.add(newPet)
@@ -16,6 +16,7 @@ def addPet(user_name:str, pet:dict):
             session.refresh(newPet)
             return 201
         else:
+            print(pet)
             return 500
     except Exception as e:
-        logging.exception(e)
+        raise e

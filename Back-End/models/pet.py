@@ -1,5 +1,5 @@
 from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, Float, LargeBinary
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, Float, LargeBinary, CHAR
 
 
 class Pet(Base):
@@ -10,10 +10,12 @@ class Pet(Base):
     owner=Column(BigInteger, ForeignKey('user.id'))
     type_of_pet=Column(Text)
     age=Column(Integer)
+    birthday=Column(DateTime)
     weight=Column(Float(3, 3))
     height=Column(Float(3, 3))
     photo=Column(LargeBinary, nullable=True)
+    gender=Column(CHAR)
     breed=Column(Text)
-    medical_history=Column(Text)
+    medical_history=Column(Text, nullable=True)
     
     
