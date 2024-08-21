@@ -1,5 +1,6 @@
 from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, CHAR, LargeBinary
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, Text, CHAR, LargeBinary, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -15,3 +16,4 @@ class User(Base):
     age=Column(Integer, nullable=True)
     profile_picture=Column(LargeBinary, nullable=True)    
     
+    pet_relationship = relationship("Pet", back_populates="owner_relationship")

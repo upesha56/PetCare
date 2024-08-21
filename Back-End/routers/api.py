@@ -66,7 +66,6 @@ def userProfile():
         else:
             data=request.get_json()
             if data:
-                print(data)
                 return jsonify({"detail": "Type of pet add successfully"}), 200
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
@@ -86,7 +85,6 @@ def petRegistration():
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
     except Exception as e:
-        raise e
         return jsonify({'error': str(e)}), 500     
     
 
