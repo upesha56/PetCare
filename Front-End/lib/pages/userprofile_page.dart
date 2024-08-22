@@ -323,10 +323,27 @@ class _userProfileState extends State<userProfile> {
           height: 190,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.amberAccent,
+            color: const Color.fromARGB(255, 249, 230, 160),
             image: const DecorationImage(
-                image: AssetImage("assets/userProfile/petAdd.jpg"),
-                fit: BoxFit.cover),
+                image: AssetImage("assets/petadd.jpg"),
+                fit: BoxFit.cover,
+                opacity: 0.7),
+          ),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle_outline,
+                  size: 40, color: Colors.black), // Add your icon
+              SizedBox(height: 10), // Spacing between icon and text
+              Text(
+                "Add Your Pet",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.black, // Text color
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(
@@ -336,11 +353,28 @@ class _userProfileState extends State<userProfile> {
           height: 190,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.amberAccent,
+            color: const Color.fromARGB(255, 249, 230, 160),
             image: const DecorationImage(
-              image: AssetImage("assets/userProfile/petAdd2.jpg"),
+              image: AssetImage("assets/petadd.jpg"),
               fit: BoxFit.cover,
+              opacity: 0.5,
             ),
+          ),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle_outline,
+                  size: 40, color: Colors.black), // Add your icon
+              SizedBox(height: 10), // Spacing between icon and text
+              Text(
+                "Add Your Pet",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.black, // Text color
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
       ],

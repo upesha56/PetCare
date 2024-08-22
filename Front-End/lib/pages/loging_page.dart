@@ -1,7 +1,6 @@
 import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/signup_page.dart';
 import 'package:chat/pages/userprofile_page.dart';
-import 'package:chat/pages/petregistration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -60,8 +59,7 @@ class _loginState extends State<login> {
         if (data['detail'] == 'user logging successfully') {
           Navigator.push(
             context,
-            //MaterialPageRoute(builder: (context) => const userProfile()),
-            MaterialPageRoute(builder: (context) => PetRegistrationPage()),
+            MaterialPageRoute(builder: (context) => const userProfile()),
           );
         } else {
           showErrorDialog(data['detail'].toString());

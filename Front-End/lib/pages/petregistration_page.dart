@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 
 class PetRegistrationPage extends StatefulWidget {
@@ -16,7 +18,20 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   final breedController = TextEditingController();
 
   bool isLoading = false;
-  // sign user in method
+  // pet registration method
+
+  Future<void> pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   void petRegistration() async {
     setState(() {
       isLoading = true;
@@ -30,35 +45,47 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
 
 
      // Ensure both fields are filled
-    if (pet_name.isEmpty || weight.isEmpty || breed.isEmpty || birthday.isEmpty || selectedGender.isEmpty || height.isEmpty) {
+    if (pet_name.isEmpty || weight.isEmpty || breed.isEmpty || birthday.isEmpty || selectedGender.isEmpty || height.isEmpty || _image == null) {
       setState(() {
         isLoading = false;
       });
-      showErrorDialog('Please enter all fields.');
+      showErrorDialog('Please fill all fields.');
       return;
     }
     try{
       var url = Uri.parse('http://10.0.2.2:8000/pet-registration');
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {"pet_name": pet_name, 
-          "weight": weight,
-          "breed" : breed,
-          "birthday": birthday,
-          "height":height,
-          "gender":selectedGender
-          }
-        )
-      );
+
+      final request = http.MultipartRequest('POST', url);
+
+      // Add form data
+      request.fields['pet_name'] = pet_name;
+      request.fields['weight'] = weight;
+      request.fields['breed'] = breed;
+      request.fields['birthday'] = birthday;
+      request.fields['height'] = height;
+      request.fields['gender'] = selectedGender;
+
+      // Add image file
+      if (_image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'photo', // This is the field name for the file in the Flask backend
+            _image!.path,
+          ),
+        );
+      }
+
+      // Send the request
+      final response = await request.send();
 
       setState(() {
         isLoading = false;
       });
 
       if (response.statusCode == 201) {
-        var data = json.decode(response.body);
+        final responseData = await http.Response.fromStream(response);
+
+        var data = json.decode(responseData.body);
 
         if (data['detail'] == 'Pet Registration successfully') {
           Navigator.push(
@@ -67,11 +94,14 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
             MaterialPageRoute(builder: (context) => PetRegistrationPage()),
           );
         } else {
+          final responseData = await http.Response.fromStream(response);
+          final data = json.decode(responseData.body);
           showErrorDialog(data['detail'].toString());
         }
       }
       else{
-        var data = json.decode(response.body);
+        final responseData = await http.Response.fromStream(response);
+        final data = json.decode(responseData.body);
         showErrorDialog(data['detail'].toString());
       } 
     }catch(e){
@@ -106,6 +136,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   List<bool> breed = [true, false];
   String selectedGender = "F";
   List<bool> isSelected2 = [true, false];
+  File? _image;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

@@ -1,3 +1,7 @@
 {
-    "cmake.sourceDirectory": "C:/Users/Pinil/Desktop/PetCare/Front-End/linux"
+    "cmake.sourceDirectory": "C:/Users/Pinil/Desktop/PetCare/Front-End/linux",
+    "cSpell.words": [
+        "petregistration",
+        "userprofile"
+    ]
 }
