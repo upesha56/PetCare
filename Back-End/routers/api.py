@@ -65,6 +65,7 @@ def userProfile():
                 return jsonify({'detail': "Unexpected error"}), 500
         else:
             data=request.get_json()
+            print(data)
             if data:
                 return jsonify({"detail": "Type of pet add successfully"}), 200
             else:
@@ -72,19 +73,27 @@ def userProfile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500 
     
-@app.route('/pet-registration', methods=["POST"])
-def petRegistration():
+@app.route('/pet-registration/<type_of_pet>', methods=["POST", "GET"])
+def petRegistration(type_of_pet:str):
     try:
         if request.method=="POST":
             data=request.get_json()
                                     
             _status=addPet(user_name=session.get('user_name'), pet=data)
             
+            print(type_of_pet)
+            
             if _status == 201:
                 return jsonify({'detail': "Pet Registration successfully"}), 201
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
+        else:
+            if type_of_pet:
+                return jsonify({'detail': "Pet Registration successfully"}), 200
+            else:
+                return jsonify({'detail': "Unexpected error"}), 500 
     except Exception as e:
+        raise e
         return jsonify({'error': str(e)}), 500     
     
 

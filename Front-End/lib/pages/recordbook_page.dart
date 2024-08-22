@@ -99,13 +99,13 @@ class RecordBookPage extends StatelessWidget {
         onPressed: () {
           // Handle create profile action
         },
-        child: const Text('Create Profile'),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
+        child: const Text('Create Profile'),
       ),
     );
   }
