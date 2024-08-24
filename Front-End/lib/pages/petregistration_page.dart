@@ -33,84 +33,74 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   }
 
   void petRegistration() async {
+    // Start the loading indicator
     setState(() {
       isLoading = true;
     });
 
-    var pet_name = petNameController.text;
-    var weight = weightController.text;
-    var height = heightController.text;
-    var breed = breedController.text;
-    var birthday= _birthdayController.text;
+    // Retrieve input values
+    var petName = petNameController.text.trim();
+    var weight = weightController.text.trim();
+    var height = heightController.text.trim();
+    var breed = breedController.text.trim();
+    var birthday = _birthdayController.text.trim();
+    var gender = selectedGender; // Assuming `selectedGender` is already set correctly
 
-
-     // Ensure both fields are filled
-    if (pet_name.isEmpty || weight.isEmpty || breed.isEmpty || birthday.isEmpty || selectedGender.isEmpty || height.isEmpty || _image == null) {
+    // Validate input fields
+    if (petName.isEmpty || weight.isEmpty || height.isEmpty || breed.isEmpty || birthday.isEmpty || gender.isEmpty) {
       setState(() {
         isLoading = false;
       });
       showErrorDialog('Please fill all fields.');
       return;
     }
-    try{
+
+    // Prepare the API call
+    try {
       var url = Uri.parse('http://10.0.2.2:8000/pet-registration');
 
-      final request = http.MultipartRequest('POST', url);
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "pet_name": petName,
+          "weight": weight,
+          "height": height,
+          "breed": breed,
+          "birthday": birthday,
+          "gender": gender,
+        }),
+      );
 
-      // Add form data
-      request.fields['pet_name'] = pet_name;
-      request.fields['weight'] = weight;
-      request.fields['breed'] = breed;
-      request.fields['birthday'] = birthday;
-      request.fields['height'] = height;
-      request.fields['gender'] = selectedGender;
-
-      // Add image file
-      if (_image != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'photo', // This is the field name for the file in the Flask backend
-            _image!.path,
-          ),
-        );
-      }
-
-      // Send the request
-      final response = await request.send();
-
+      // Stop the loading indicator
       setState(() {
         isLoading = false;
       });
 
+      // Handle the API response
       if (response.statusCode == 201) {
-        final responseData = await http.Response.fromStream(response);
-
-        var data = json.decode(responseData.body);
-
+        var data = json.decode(response.body);
         if (data['detail'] == 'Pet Registration successfully') {
           Navigator.push(
             context,
-            //MaterialPageRoute(builder: (context) => const userProfile()),
             MaterialPageRoute(builder: (context) => PetRegistrationPage()),
           );
         } else {
-          final responseData = await http.Response.fromStream(response);
-          final data = json.decode(responseData.body);
           showErrorDialog(data['detail'].toString());
         }
-      }
-      else{
-        final responseData = await http.Response.fromStream(response);
-        final data = json.decode(responseData.body);
+      } else {
+        var data = json.decode(response.body);
         showErrorDialog(data['detail'].toString());
-      } 
-    }catch(e){
+      }
+    } catch (e) {
+      // Handle any errors that occur during the API call
       setState(() {
         isLoading = false;
       });
       showErrorDialog('An error occurred. Please try again.');
     }
   }
+
 
   //error showing method
   void showErrorDialog(String errorMessage) {
@@ -137,6 +127,15 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   String selectedGender = "F";
   List<bool> isSelected2 = [true, false];
   File? _image;
+
+  Future<void> _pickImage() async {
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -191,7 +190,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   Widget _profilePic(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Handle image upload
+        _pickImage;
       },
       child: const CircleAvatar(
         radius: 50,
