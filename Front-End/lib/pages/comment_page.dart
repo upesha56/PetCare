@@ -3,9 +3,77 @@ import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Comment extends StatelessWidget {
-  Comment({super.key});
+
+class Comment extends StatefulWidget {
+  const Comment({super.key});
+
+  @override
+  State<Comment> createState() => CommentPage();
+}
+
+class CommentPage extends State<Comment> {
+
+  final contentController = TextEditingController();
+
+  bool isLoading = false;
+  
+
+  void signInUser() async {
+
+    var content = contentController.text;
+
+    // Ensure both fields are filled
+    if (content.isEmpty) {
+      showErrorDialog('Please enter both username and password.');
+      return;
+    }
+    try {
+      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"content": content}));
+
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['detail'] == 'user logging successfully') {
+          print("h");
+        } else {
+          showErrorDialog(data['detail'].toString());
+        }
+      } else {
+        var data = json.decode(response.body);
+        showErrorDialog(data['detail'].toString());
+      }
+    } catch (e) {
+      showErrorDialog('An error occurred. Please try again.');
+    }
+  }
+
+  //error showing method
+  void showErrorDialog(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +247,12 @@ class Comment extends StatelessWidget {
                             color: Colors.grey,
                             width: 3.5,
                           ))),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          controller: contentController,
                           textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "What's on your mind?",
                             border: InputBorder.none,
                             hintStyle: TextStyle(

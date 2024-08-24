@@ -1,6 +1,7 @@
 import 'package:chat/pages/comment_page.dart';
 import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/store_page.dart';
+import 'package:chat/pages/comment_page.dart';
 import 'package:chat/widgets/first_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,10 +95,9 @@ class CommunityPage extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Comment(),
-                              ));
+                            context,
+                            MaterialPageRoute(builder: (context) => Comment()),
+                          );
                         },
                         icon: const Icon(
                           Icons.photo_library,
