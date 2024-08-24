@@ -2,7 +2,6 @@ import 'package:chat/pages/loging_page.dart';
 import 'package:chat/pages/petregistration_page.dart';
 import 'package:flutter/material.dart';
 
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,6 +14,7 @@ class userProfile extends StatefulWidget {
 
 // ignore: non_constant_identifier_names
 final typeOfPetController = TextEditingController();
+
 class _userProfileState extends State<userProfile> {
   Future<String?> userProfile() async {
     try {
@@ -33,19 +33,17 @@ class _userProfileState extends State<userProfile> {
   }
 
   void selectPetCategory(String typeOfPet) async {
-     // Ensure both fields are filled
+    // Ensure both fields are filled
     if (typeOfPet.isEmpty) {
       showErrorDialog('Please enter type of pet.');
       return;
     }
-    try{
+    try {
       var url = Uri.parse('http://10.0.2.2:8000/user-profile');
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: {"type_of_pet": typeOfPet}
-      );
-    }catch(e){
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: {"type_of_pet": typeOfPet});
+    } catch (e) {
       showErrorDialog('An error occurred. Please try again.');
     }
   }
@@ -301,15 +299,15 @@ class _userProfileState extends State<userProfile> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GestureDetector(
-        onTap: () {
-          // Handle the first container tap event here
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PetRegistrationPage()),
-          );
-          // Add your logic here, like navigation or showing a dialog
-        },
-          child:Container(
+          onTap: () {
+            // Handle the first container tap event here
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PetRegistrationPage()),
+            );
+            // Add your logic here, like navigation or showing a dialog
+          },
+          child: Container(
             height: 190,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),

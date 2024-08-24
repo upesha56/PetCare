@@ -212,7 +212,7 @@ class _loginState extends State<login> {
   _signInPic(context) {
     return Container(
       child: const Image(
-        image: AssetImage("assets/loginAndSignin.jpg"),
+        image: AssetImage("assets/signupimage.png"),
         width: 250,
         height: 250,
       ),
