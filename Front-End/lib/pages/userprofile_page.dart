@@ -32,27 +32,19 @@ class _userProfileState extends State<userProfile> {
     }
   }
 
-  String type_of_pet=" ";
-
-  void selectPetCategory() async {
+  void selectPetCategory(String typeOfPet) async {
      // Ensure both fields are filled
-    if (type_of_pet.isEmpty) {
+    if (typeOfPet.isEmpty) {
       showErrorDialog('Please enter type of pet.');
       return;
     }
     try{
-      var url = Uri.parse('http://10.0.2.2:8000/pet-registration/$type_of_pet');
-      var response = await http.get(
+      var url = Uri.parse('http://10.0.2.2:8000/user-profile');
+      var response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json"},
+        body: {"type_of_pet": typeOfPet}
       );
-
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PetRegistrationPage()),
-        );
-      } 
     }catch(e){
       showErrorDialog('An error occurred. Please try again.');
     }
@@ -234,7 +226,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                type_of_pet="dog";
+                selectPetCategory("dog");
               },
               icon: const Image(image: AssetImage("assets/doglogo.jpg")),
             ),
@@ -251,7 +243,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                type_of_pet="cat";
+                selectPetCategory("cat");
               },
               icon: const Image(
                 image: AssetImage("assets/catlogo.jpg"),
@@ -270,7 +262,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                type_of_pet="fish";
+                selectPetCategory("fish");
               },
               icon: const Image(
                 image: AssetImage("assets/fish.jpg"),
@@ -289,7 +281,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                type_of_pet="rabbit";
+                selectPetCategory("rabbit");
               },
               icon: const Image(
                 image: const AssetImage("assets/rabbit.jpg"),
@@ -311,8 +303,10 @@ class _userProfileState extends State<userProfile> {
         GestureDetector(
         onTap: () {
           // Handle the first container tap event here
-          print("First Container tapped!");
-          selectPetCategory();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PetRegistrationPage()),
+          );
           // Add your logic here, like navigation or showing a dialog
         },
           child:Container(
