@@ -1,6 +1,7 @@
 import os 
 from flask import Flask, request, jsonify
 from crud.user import createUser, loginUser, getUser
+from crud.post import addPost
 from crud.pet import addPet
 
 
@@ -54,7 +55,7 @@ def login():
 @app.route('/user-profile', methods=["GET", "POST"])
 def userProfile():
     try:
-        user = getUser(user_name=session.get('user_name'))
+        user = getUser(user_name=session['user_name'])
         if not request.method=="POST":
             if user:
                 return jsonify({
@@ -66,6 +67,7 @@ def userProfile():
         else:
             data=request.get_json()
             print(data)
+            session["type_of_pet"]=data['type_of_pet']
             if data:
                 return jsonify({"detail": "Type of pet add successfully"}), 200
             else:
@@ -73,28 +75,37 @@ def userProfile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500 
     
-@app.route('/pet-registration/<type_of_pet>', methods=["POST", "GET"])
-def petRegistration(type_of_pet:str):
+    
+    
+@app.route('/pet-registration', methods=["POST"])
+def petRegistration():
     try:
         if request.method=="POST":
             data=request.get_json()
+            print(data, session['user_name'])                                  
                                     
-            _status=addPet(user_name=session.get('user_name'), pet=data)
-            
-            print(type_of_pet)
-            
+            _status=addPet(user_name=session['user_name'], pet=data)
+                        
             if _status == 201:
                 return jsonify({'detail': "Pet Registration successfully"}), 201
             else:
                 return jsonify({'detail': "Unexpected error"}), 500
-        else:
-            if type_of_pet:
-                return jsonify({'detail': "Pet Registration successfully"}), 200
-            else:
-                return jsonify({'detail': "Unexpected error"}), 500 
     except Exception as e:
-        raise e
         return jsonify({'error': str(e)}), 500     
+    
+@app.route('/comment', methods=["POST"])
+def addComment():
+    try:
+        if request.method == "POST":
+            data=request.get_json()
+            _status=addPost(user_name=session["user_name"], content=data['content'])
+            if _status == 201:
+                return jsonify({'detail': "Post Creation successfully"}), 201
+            else:
+                return jsonify({'error': str(e)}), 500             
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500     
+        
     
 
 
