@@ -226,7 +226,7 @@ class _signUpState extends State<signUp> {
     return Center(
       child: Container(
         child: const Image(
-          image: AssetImage("assets/loginAndSignin.jpg"),
+          image: AssetImage("assets/signupimage.png"),
           width: 250,
           height: 250,
         ),
