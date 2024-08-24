@@ -14,16 +14,14 @@ class signUp extends StatefulWidget {
 }
 
 class _signUpState extends State<signUp> {
-
-    // text editing controllers
+  // text editing controllers
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneNumberController = TextEditingController();
 
-
   bool isLoading = false;
 
-    // sign user in method
+  // sign user in method
   void signUPUser() async {
     setState(() {
       isLoading = true;
@@ -31,10 +29,9 @@ class _signUpState extends State<signUp> {
 
     var user_name = userNameController.text;
     var password = passwordController.text;
-    var phone_number=phoneNumberController.text;
+    var phone_number = phoneNumberController.text;
 
-
-     // Ensure both fields are filled
+    // Ensure both fields are filled
     if (user_name.isEmpty || password.isEmpty || phone_number.isEmpty) {
       setState(() {
         isLoading = false;
@@ -42,17 +39,15 @@ class _signUpState extends State<signUp> {
       showErrorDialog('Please enter username ,password and phone Number.');
       return;
     }
-    try{
+    try {
       var url = Uri.parse('http://10.0.2.2:8000/register');
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {"user_name": user_name, 
-          "password": password,
-          "phone_number":phone_number}
-        )
-      );
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "user_name": user_name,
+            "password": password,
+            "phone_number": phone_number
+          }));
 
       setState(() {
         isLoading = false;
@@ -69,12 +64,11 @@ class _signUpState extends State<signUp> {
         } else {
           showErrorDialog(data['detail'].toString());
         }
-      }
-      else{
+      } else {
         var data = json.decode(response.body);
         showErrorDialog(data['detail'].toString());
-      } 
-    }catch(e){
+      }
+    } catch (e) {
       setState(() {
         isLoading = false;
       });
@@ -107,17 +101,122 @@ class _signUpState extends State<signUp> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(229, 202, 119, 30),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(30),
-          child: Column(children: [
-            _signupImage(context),
-            _header(context),
-            _inputFeild(context),
-            _elevateButton(context),
-            _signIn(context),
-            _otherConnect(context),
-          ]),
+        backgroundColor: const Color.fromARGB(255, 249, 246, 244),
+        body: Stack(
+          children: [
+            SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: Image.asset(
+                "assets/foot.png",
+                alignment: AlignmentDirectional.centerStart,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(70.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.3, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 90,
+                    width: 90,
+                    child: Image.asset(
+                      'assets/paw.png',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(190.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(60.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 70,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(55.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(10.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ), // Background Image
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                      "assets/background_image.jpg"), // Replace with your image
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            // Foreground Content
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(30),
+              child: Column(children: [
+                _signupImage(context),
+                _header(context),
+                _inputFeild(context),
+                _elevateButton(context),
+                _signIn(context),
+                _otherConnect(context),
+              ]),
+            ),
+          ],
         ),
       ),
     );
@@ -160,7 +259,7 @@ class _signUpState extends State<signUp> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextField(
-          controller:userNameController,
+          controller: userNameController,
           decoration: InputDecoration(
               hintText: "User Name",
               border: OutlineInputBorder(
@@ -219,11 +318,11 @@ class _signUpState extends State<signUp> {
             padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(vertical: 10)),
           ),
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 20),
-            ),
+          child: const Text(
+            "Sign Up",
+            style: TextStyle(fontSize: 20),
           ),
+        ),
       ],
     );
   }
