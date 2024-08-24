@@ -1,5 +1,7 @@
 import 'package:chat/pages/loging_page.dart';
+import 'package:chat/pages/petregistration_page.dart';
 import 'package:flutter/material.dart';
+
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,39 +32,26 @@ class _userProfileState extends State<userProfile> {
     }
   }
 
-  void selectPetCategory(String type_of_pet) async {
+  String type_of_pet=" ";
 
+  void selectPetCategory() async {
      // Ensure both fields are filled
     if (type_of_pet.isEmpty) {
       showErrorDialog('Please enter type of pet.');
       return;
     }
     try{
-      var url = Uri.parse('http://10.0.2.2:8000/user-profile');
-      var response = await http.post(
+      var url = Uri.parse('http://10.0.2.2:8000/pet-registration/$type_of_pet');
+      var response = await http.get(
         url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {"type_of_pet": type_of_pet}
-        )
+        headers: {"Content-Type": "application/json"}
       );
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-
-        if (data['detail'] == 'Type of pet add successfully') {
-          //Navigator.push(
-            //context,
-           // MaterialPageRoute(builder: (context) => const userProfile()),
-          //);
-          print("hi");
-        } else {
-          showErrorDialog(data['detail'].toString());
-        }
-      }
-      else{
-        var data = json.decode(response.body);
-        showErrorDialog(data['detail'].toString());
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PetRegistrationPage()),
+        );
       } 
     }catch(e){
       showErrorDialog('An error occurred. Please try again.');
@@ -245,7 +234,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                selectPetCategory("dog");
+                type_of_pet="dog";
               },
               icon: const Image(image: AssetImage("assets/doglogo.jpg")),
             ),
@@ -262,7 +251,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                selectPetCategory("cat");
+                type_of_pet="cat";
               },
               icon: const Image(
                 image: AssetImage("assets/catlogo.jpg"),
@@ -281,7 +270,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                selectPetCategory("fish");
+                type_of_pet="fish";
               },
               icon: const Image(
                 image: AssetImage("assets/fish.jpg"),
@@ -300,7 +289,7 @@ class _userProfileState extends State<userProfile> {
             height: 80,
             child: IconButton(
               onPressed: () {
-                selectPetCategory("rabbit");
+                type_of_pet="rabbit";
               },
               icon: const Image(
                 image: const AssetImage("assets/rabbit.jpg"),
@@ -319,14 +308,39 @@ class _userProfileState extends State<userProfile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          height: 190,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.amberAccent,
-            image: const DecorationImage(
-                image: AssetImage("assets/userProfile/petAdd.jpg"),
-                fit: BoxFit.cover),
+        GestureDetector(
+        onTap: () {
+          // Handle the first container tap event here
+          print("First Container tapped!");
+          selectPetCategory();
+          // Add your logic here, like navigation or showing a dialog
+        },
+          child:Container(
+            height: 190,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color.fromARGB(255, 249, 230, 160),
+              image: const DecorationImage(
+                  image: AssetImage("assets/petadd.jpg"),
+                  fit: BoxFit.cover,
+                  opacity: 0.7),
+            ),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_circle_outline,
+                    size: 40, color: Colors.black), // Add your icon
+                SizedBox(height: 10), // Spacing between icon and text
+                Text(
+                  "Add Your Pet",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black, // Text color
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(
@@ -336,11 +350,28 @@ class _userProfileState extends State<userProfile> {
           height: 190,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.amberAccent,
+            color: const Color.fromARGB(255, 249, 230, 160),
             image: const DecorationImage(
-              image: AssetImage("assets/userProfile/petAdd2.jpg"),
+              image: AssetImage("assets/petadd.jpg"),
               fit: BoxFit.cover,
+              opacity: 0.5,
             ),
+          ),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle_outline,
+                  size: 40, color: Colors.black), // Add your icon
+              SizedBox(height: 10), // Spacing between icon and text
+              Text(
+                "Add Your Pet",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.black, // Text color
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
       ],

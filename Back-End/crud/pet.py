@@ -7,7 +7,7 @@ Base.metadata.create_all(engine)
 
 def addPet(user_name:str, pet:dict):
     try:
-        user=session.query(UserModel).filter(user_name=user_name).first()
+        user=session.query(UserModel).filter_by(user_name=user_name).first()
         pet['owner']=user.id
         newPet=PetModel(**pet)
         if newPet:
