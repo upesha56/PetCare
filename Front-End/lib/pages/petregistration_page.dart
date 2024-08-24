@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:chat/pages/community.dart';
+import 'package:chat/pages/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -298,6 +300,57 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
               ),
             ),
           ],
+        ),
+        extendBody: false,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.transparent,
+          ),
+          child: BottomNavigationBar(
+            currentIndex: 0,
+            selectedItemColor: Colors.amber,
+            unselectedItemColor: Colors.grey,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            iconSize: 35,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: GestureDetector(
+                    onTap: () {}, child: const Icon(Icons.home)),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StorePage(),
+                          ));
+                    },
+                    child: const Icon(Icons.shopping_cart)),
+                label: 'Cart',
+              ),
+              BottomNavigationBarItem(
+                icon: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommunityPage(),
+                          ));
+                    },
+                    child: const Icon(Icons.people)),
+                label: 'People',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                label: 'Account',
+              ),
+            ],
+          ),
         ),
       ),
     );
