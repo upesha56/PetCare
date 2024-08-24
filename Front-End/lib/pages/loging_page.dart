@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class login extends StatefulWidget {
   const login({super.key});
 
@@ -14,14 +13,13 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
-
   // text editing controllers
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool isLoading = false;
 
-    // sign user in method
+  // sign user in method
   void signInUser() async {
     setState(() {
       isLoading = true;
@@ -30,8 +28,7 @@ class _loginState extends State<login> {
     var user_name = userNameController.text;
     var password = passwordController.text;
 
-
-     // Ensure both fields are filled
+    // Ensure both fields are filled
     if (user_name.isEmpty || password.isEmpty) {
       setState(() {
         isLoading = false;
@@ -39,15 +36,11 @@ class _loginState extends State<login> {
       showErrorDialog('Please enter both username and password.');
       return;
     }
-    try{
+    try {
       var url = Uri.parse('http://10.0.2.2:8000/login');
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {"user_name": user_name, "password": password}
-        )
-      );
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"user_name": user_name, "password": password}));
 
       setState(() {
         isLoading = false;
@@ -64,12 +57,11 @@ class _loginState extends State<login> {
         } else {
           showErrorDialog(data['detail'].toString());
         }
-      }
-      else{
+      } else {
         var data = json.decode(response.body);
         showErrorDialog(data['detail'].toString());
-      } 
-    }catch(e){
+      }
+    } catch (e) {
       setState(() {
         isLoading = false;
       });
@@ -102,18 +94,116 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(229, 202, 119, 30),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(30),
-          child: Column(children: [
-            _signInPic(context),
-            _header(context),
-            _inputFeild(context),
-            _forgotPassword(context),
-            _elevateButton(context),
-            _signUp(context),
-            _otherConnect(context),
-          ]),
+        backgroundColor: const Color.fromARGB(255, 249, 246, 244),
+        body: Stack(
+          children: [
+            SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: Image.asset(
+                "assets/foot.png",
+                alignment: AlignmentDirectional.centerStart,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(70.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.3, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 90,
+                    width: 90,
+                    child: Image.asset(
+                      'assets/paw.png',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(190.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(60.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 70,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(55.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(10.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ), // Background Image (optional)
+
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                children: [
+                  _signInPic(context),
+                  _header(context),
+                  _inputFeild(context),
+                  _forgotPassword(context),
+                  _elevateButton(context),
+                  _signUp(context),
+                  _otherConnect(context),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -203,7 +293,7 @@ class _loginState extends State<login> {
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
             shape: MaterialStateProperty.all(const StadiumBorder()),
             padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 10)),
+                const EdgeInsets.symmetric(vertical: 10)),
           ),
           child: const Text(
             "Sign In",
