@@ -73,24 +73,131 @@ class _userProfileState extends State<userProfile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(229, 202, 119, 30),
+        backgroundColor: const Color.fromARGB(255, 249, 246, 244),
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-            backgroundColor: Colors.amber,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context, const login());
-              },
-              icon: const Icon(Icons.arrow_back_rounded),
-            )),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(30), // Optional
-          child: Column(
-            children: <Widget>[
-              _userDetail(),
-              _petCategory(),
-              _petAdding(),
-            ],
+          // App Bar
+          title: const Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Profile",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xffFFB03E),
+                fontSize: 28,
+                fontFamily: 'CustomFont',
+              ),
+            ),
           ),
+          backgroundColor: Colors.transparent, // Set to transparent
+          elevation: 1.0, // Remove the shadow
+        ),
+        body: Stack(
+          children: [
+            SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: Image.asset(
+                "assets/foot.png",
+                alignment: AlignmentDirectional.centerStart,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(70.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.3, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 90,
+                    width: 90,
+                    child: Image.asset(
+                      'assets/paw.png',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(190.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(60.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 70,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(55.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(10.0), // Add some padding if needed
+                child: Opacity(
+                  opacity:
+                      0.4, // Adjust the opacity as needed for watermark effect
+                  child: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Image.asset('assets/paw.png'),
+                  ),
+                ),
+              ),
+            ), // Background Image (if needed)
+
+            // Foreground Content
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                children: <Widget>[
+                  _userDetail(),
+                  _petCategory(),
+                  _petAdding(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -103,6 +210,9 @@ class _userProfileState extends State<userProfile> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Row(
             children: [
+              SizedBox(
+                height: 120,
+              ),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -122,11 +232,9 @@ class _userProfileState extends State<userProfile> {
               ),
               const SizedBox(width: 55),
               Container(
-                color: Colors.amberAccent,
-                child: const Image(
-                  image: AssetImage("assets/loginAndSignin/signin.png"),
-                  width: 150,
-                  height: 150,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  color: Colors.transparent,
                 ),
               ),
             ],
@@ -166,6 +274,9 @@ class _userProfileState extends State<userProfile> {
         } else {
           return Row(
             children: [
+              SizedBox(
+                height: 50,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -185,12 +296,9 @@ class _userProfileState extends State<userProfile> {
               ),
               const SizedBox(width: 55),
               Container(
-                color: Colors.amberAccent,
-                child: const Image(
-                  image: AssetImage("assets/loginAndSignin/signin.png"),
-                  width: 150,
-                  height: 150,
-                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    color: Colors.transparent),
               ),
             ],
           );
@@ -226,7 +334,7 @@ class _userProfileState extends State<userProfile> {
               onPressed: () {
                 selectPetCategory("dog");
               },
-              icon: const Image(image: AssetImage("assets/doglogo.jpg")),
+              icon: const Image(image: AssetImage("assets/dog.png")),
             ),
           ),
           const SizedBox(
@@ -244,7 +352,7 @@ class _userProfileState extends State<userProfile> {
                 selectPetCategory("cat");
               },
               icon: const Image(
-                image: AssetImage("assets/catlogo.jpg"),
+                image: AssetImage("assets/cat.png"),
               ),
             ),
           ),
@@ -263,7 +371,7 @@ class _userProfileState extends State<userProfile> {
                 selectPetCategory("fish");
               },
               icon: const Image(
-                image: AssetImage("assets/fish.jpg"),
+                image: AssetImage("assets/fish.png"),
               ),
             ),
           ),
@@ -282,7 +390,7 @@ class _userProfileState extends State<userProfile> {
                 selectPetCategory("rabbit");
               },
               icon: const Image(
-                image: const AssetImage("assets/rabbit.jpg"),
+                image: AssetImage("assets/paw.png"),
               ),
             ),
           ),
@@ -313,7 +421,7 @@ class _userProfileState extends State<userProfile> {
               borderRadius: BorderRadius.circular(15),
               color: const Color.fromARGB(255, 249, 230, 160),
               image: const DecorationImage(
-                  image: AssetImage("assets/petadd.jpg"),
+                  image: AssetImage("assets/addaone.jpg"),
                   fit: BoxFit.cover,
                   opacity: 0.7),
             ),
@@ -344,7 +452,7 @@ class _userProfileState extends State<userProfile> {
             borderRadius: BorderRadius.circular(15),
             color: const Color.fromARGB(255, 249, 230, 160),
             image: const DecorationImage(
-              image: AssetImage("assets/petadd.jpg"),
+              image: AssetImage("assets/addtwo.jpg"),
               fit: BoxFit.cover,
               opacity: 0.5,
             ),

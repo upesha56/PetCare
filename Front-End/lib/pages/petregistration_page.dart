@@ -165,7 +165,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        //extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: false,
         appBar: AppBar(
           // App Bar
           title: const Align(
@@ -308,7 +308,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
           ),
           child: BottomNavigationBar(
             currentIndex: 0,
-            selectedItemColor: Colors.amber,
+            selectedItemColor: Colors.grey,
             unselectedItemColor: Colors.grey,
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -374,7 +374,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       controller: petNameController,
       decoration: const InputDecoration(
         labelText: 'Name',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
     );
   }
@@ -384,7 +385,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       controller: _birthdayController,
       decoration: const InputDecoration(
         labelText: 'Birthday',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
       readOnly: true,
       onTap: () => _selectDate(context),
@@ -406,10 +408,10 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
         ToggleButtons(
           borderColor: Colors.orange,
           fillColor: Colors.orange,
-          borderWidth: 2,
+          borderWidth: 1,
           selectedBorderColor: Colors.orange,
           selectedColor: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(25),
           constraints: const BoxConstraints(
             minHeight: 40.0,
             minWidth: 100.0,
@@ -437,7 +439,7 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Status',
+          'Primary Vaccination Status',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -447,10 +449,10 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
         ToggleButtons(
           borderColor: Colors.orange,
           fillColor: Colors.orange,
-          borderWidth: 2,
+          borderWidth: 1,
           selectedBorderColor: Colors.orange,
           selectedColor: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(25),
           constraints: const BoxConstraints(
             minHeight: 40.0,
             minWidth: 100.0,
@@ -477,7 +479,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       controller: weightController,
       decoration: const InputDecoration(
         labelText: 'Weight (Kg)',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
       keyboardType: TextInputType.number,
     );
@@ -488,7 +491,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       controller: heightController,
       decoration: const InputDecoration(
         labelText: 'Height (cm)',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
       keyboardType: TextInputType.number,
     );
@@ -499,7 +503,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       controller: breedController,
       decoration: const InputDecoration(
         labelText: 'Breed',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
     );
   }
@@ -509,7 +514,8 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(
-          width: 120.0, // Set the width here
+          width: 180.0,
+          height: 40, // Set the width here
           child: ElevatedButton(
             onPressed: () {
               // Handle back action
@@ -518,24 +524,31 @@ class _PetRegistrationPageState extends State<PetRegistrationPage> {
               backgroundColor: Colors.orange,
               shape: RoundedRectangleBorder(
                 borderRadius:
-                    BorderRadius.circular(10.0), // Set the border radius here
+                    BorderRadius.circular(20.0), // Set the border radius here
               ),
             ),
-            child: const Text('Back'),
+            child: const Text(
+              'Back',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
           ),
         ),
         SizedBox(
-          width: 120.0, // Set the width here
+          width: 180.0,
+          height: 40, // Set the width here
           child: ElevatedButton(
             onPressed: petRegistration,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
               shape: RoundedRectangleBorder(
                 borderRadius:
-                    BorderRadius.circular(10.0), // Set the border radius here
+                    BorderRadius.circular(20.0), // Set the border radius here
               ),
             ),
-            child: const Text('Add'),
+            child: const Text(
+              'Add',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
           ),
         )
       ],
