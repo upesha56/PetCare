@@ -17,3 +17,15 @@ def addPost(user_name:str, content:str):
             return 201
     except Exception as e:
         logging.exception(e)
+        
+        
+def getPost():
+    try:
+        postDic={}
+        posts=session.query(PostModel).all()
+        for post in posts:
+            postDic['owner']=post.owner
+            postDic['content']=post.content
+        return postDic
+    except Exception as e:
+        logging.exception(e)        

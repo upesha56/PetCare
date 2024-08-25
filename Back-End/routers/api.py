@@ -1,7 +1,7 @@
 import os 
 from flask import Flask, request, jsonify
-from crud.user import createUser, loginUser, getUser
-from crud.post import addPost
+from crud.user import createUser, loginUser, getUser, updateUser
+from crud.post import addPost, getPost
 from crud.pet import addPet
 
 
@@ -106,9 +106,38 @@ def addComment():
     except Exception as e:
         return jsonify({'error': str(e)}), 500     
         
+@app.route("/community", methods=['GET'])
+def communityPost():
+    try:
+        if not request.method=="POST":
+            post=getPost()
+            if post:
+                return jsonify({
+                    "detail": "Post retrieved successfully",
+                    "post": post,
+                }), 200
+            else:
+                return jsonify({
+                    "detail": "Unexpected error",
+                }), 500
+        else:
+            return jsonify({'detail': "Unexpected error"}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
-
-
+@app.route("/update-profile", methods=["POST"])
+def update_user():
+    try:
+        if request.method == "POST":
+            data=request.json()
+            _status=updateUser(user_name=session["user_name"], email=data["email"], name=data['name'], address=data['address'], age=data['age'], phone_number=data['phone_number'])
+            if _status == 201:
+                return jsonify({'detail': "Update user successfully"}), 201
+            else:
+                return jsonify({'detail': "Unexpected error"}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+                
     
 @app.route('/logout', methods=["GET", "POST"])
 def logout():

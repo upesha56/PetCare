@@ -1,5 +1,4 @@
 import 'package:chat/pages/community.dart';
-import 'package:chat/pages/home_page.dart';
 import 'package:chat/pages/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +20,7 @@ class CommentPage extends State<Comment> {
   bool isLoading = false;
   
 
-  void signInUser() async {
+  void postUser() async {
 
     var content = contentController.text;
 
@@ -31,17 +30,20 @@ class CommentPage extends State<Comment> {
       return;
     }
     try {
-      var url = Uri.parse('http://10.0.2.2:8000/login');
+      var url = Uri.parse('http://10.0.2.2:8000/comment');
       var response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: json.encode({"content": content}));
 
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         var data = json.decode(response.body);
 
-        if (data['detail'] == 'user logging successfully') {
-          print("h");
+        if (data['detail'] == 'Post Creation successfully') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CommunityPage()),
+          );
         } else {
           showErrorDialog(data['detail'].toString());
         }
@@ -215,16 +217,15 @@ class CommentPage extends State<Comment> {
                               )
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Post",
-                                  style: TextStyle(
-                                    color: Color.fromARGB(184, 51, 17, 4),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
+                              children: <Widget>[
+                                ElevatedButton(
+                                  onPressed: postUser,
+                                  child: const Text(
+                                    "Post",
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                               ],
