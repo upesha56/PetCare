@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   ];
 
   final List<String> imageTitles = [
-    "Meal Plan",
+    "Medical Records",
     "Store",
     "Track My Pet",
     "Pet Community",
