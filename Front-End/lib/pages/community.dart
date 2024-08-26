@@ -4,9 +4,27 @@ import 'package:chat/pages/store_page.dart';
 import 'package:chat/widgets/first_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CommunityPage extends StatelessWidget {
   CommunityPage({super.key});
+
+  Future<String?> userProfile() async {
+    try {
+      var url = Uri.parse('http://10.0.2.2:8000/community');
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        return data['post'];
+      } else {
+        return 'Failed to fetch post. Status code: ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'An error occurred. Please try again.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +112,9 @@ class CommunityPage extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Comment(),
-                              ));
+                            context,
+                            MaterialPageRoute(builder: (context) => Comment()),
+                          );
                         },
                         icon: const Icon(
                           Icons.photo_library,

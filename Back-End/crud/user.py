@@ -47,7 +47,7 @@ def getUser(user_name:str):
     except Exception as e:
         logging.exception(e)
         
-def updateUser(user_name:str, email:str, address:str, age:int, profile_picture):
+def updateUser(user_name:str, email:str=None, address:str=None, age:int=None, profile_picture=None, phone_number:int=None, name:str=None):
     try:
         existingUser=session.query(UserModel).filter_by(user_name=user_name).first()
         if existingUser:
@@ -59,13 +59,16 @@ def updateUser(user_name:str, email:str, address:str, age:int, profile_picture):
                 existingUser.age=age
             if profile_picture is not None:
                 existingUser.profile_picture=profile_picture
+            if phone_number is not None:
+                existingUser.phone_number=phone_number
             session.commit()
             session.refresh(existingUser)
-            return 200
+            return 201
         else:
             return 401
     except Exception as e:
         logging.exception(e)
         
+
         
         
