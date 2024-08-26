@@ -1,20 +1,17 @@
+import 'dart:math';
+
+import 'package:chat/pages/loging_page.dart';
 import 'package:flutter/material.dart';
 
-
 class LoadingPage extends StatelessWidget {
-  const LoadingPage(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.progress});
-  final double width;
-  final double height;
-  final double progress;
+  const LoadingPage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 249, 246, 244),
+      backgroundColor: const Color.fromARGB(255, 249, 246, 244),
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -46,27 +43,36 @@ class LoadingPage extends StatelessWidget {
             ),
             Container(
               width: 200,
-              height: 20,
+              height: 40,
               child: Stack(
                 children: [
                   Container(
-                    width: width * progress,
-                    height: height,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 234, 216, 161),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${(progress * Checkbox.width).toInt()}%',
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 70, 26, 16),
-                        fontWeight: FontWeight.bold,
+                    width: 200,
+                    height: 100,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => login(),
+                              ));
+                        },
+                        child: const Text(
+                          "Let's Start",
+                          style: TextStyle(
+                              color: Color(0xffFFB03E),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
-                  )
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 249, 246, 244),
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: Colors.grey, width: 2),
+                    ),
+                  ),
                 ],
               ),
             ),
