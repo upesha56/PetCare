@@ -9,7 +9,7 @@ class Pet(Base):
     pet_name=Column(String(20))
     owner=Column(BigInteger, ForeignKey('user.id'), nullable=False)
     type_of_pet=Column(Text)
-    age=Column(Integer)
+    age=Column(Integer, nullable=True)
     birthday=Column(DateTime)
     weight=Column(Float(3, 3))
     height=Column(Float(3, 3))
